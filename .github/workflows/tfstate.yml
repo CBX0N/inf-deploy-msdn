@@ -21,5 +21,5 @@ jobs:
       - name: Deploy TFState
         uses: azure/powershell@v1
         with:
-          inlineScript: ./scripts/manage-tfstate.ps1 -tf_rg_name ${{ variables.TFSTATE_RESOURCE_GROUP }} -tf_container_name ${{ variables.TFSTATE_CONTAINER_NAME }}  -tf_sa_name ${{ variables.TFSTATE_STORAGE_ACCOUNT }} 
+          inlineScript: ./scripts/manage-tfstate.ps1 -tf_rg_name ${{ vars.TFSTATE_RESOURCE_GROUP }} -tf_container_name ${{ vars.TFSTATE_CONTAINER_NAME }}  -tf_sa_name ${{ vars.TFSTATE_STORAGE_ACCOUNT }} 
           azPSVersion: "latest"
