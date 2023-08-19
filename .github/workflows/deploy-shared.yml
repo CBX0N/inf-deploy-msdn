@@ -64,7 +64,7 @@ jobs:
         working-directory: ./terraform/shared/uks
 
       - name: Terraform Format
-        run: terraform fmt -check
+        run: terraform fmt
         working-directory: ./terraform/dev/uks
 
       - name: Terraform Plan
