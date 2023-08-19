@@ -1,5 +1,5 @@
 name: Deploy Resources Required for Remote TFSTATE
-on: [push]
+on: [workflow_dispatch]
 
 permissions:
       id-token: write
@@ -7,17 +7,10 @@ permissions:
 jobs: 
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: HashiCorp - Setup Terraform
-        uses: hashicorp/setup-terraform@v2.0.3
-        
+  
       - name: Az CLI login
         uses: azure/login@v1
         with:
@@ -25,14 +18,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Terraform Init
-        run: terraform init
-        working-directory: ./terraform/shared/uks
-
-      - name: Terraform Format
-        run: terraform fmt -check
-        working-directory: ./terraform/shared/uks
-
-      - name: Terraform Plan
-        run: terraform plan -input=false
-        working-directory: ./terraform/shared/uks
+      - name: Deploy TFState
+        uses: azure/powershell@v1
+        with:
+          inlineScript: ./scripts/manage-tfstate.ps1 -tf_rg_name ${{ vars.TFSTATE_RESOURCE_GROUP }} -tf_container_name ${{ vars.TFSTATE_CONTAINER_NAME }}  -tf_sa_name ${{ vars.TFSTATE_STORAGE_ACCOUNT }} 
+          azPSVersion: "latest"

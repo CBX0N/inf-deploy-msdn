@@ -1,2 +1,38 @@
-- name: HashiCorp - Setup Terraform
-  uses: hashicorp/setup-terraform@v2.0.3
+name: Deploy Shared Resources
+on: [push]
+
+permissions:
+      id-token: write
+      contents: read
+jobs: 
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+        
+      - name: Az CLI login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform/shared/uks
+
+      - name: Terraform Format
+        run: terraform fmt -check
+        working-directory: ./terraform/shared/uks
+
+      - name: Terraform Plan
+        run: terraform plan -input=false
+        working-directory: ./terraform/shared/uks
