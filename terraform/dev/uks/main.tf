@@ -38,7 +38,12 @@ resource "azurerm_windows_virtual_machine" "vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  source_image_id = "/subscriptions/e6d082dc-4d3e-4f6e-aa03-7fd96870f83d/resourceGroups/rg-gal-cbx-uks-dev-001/providers/Microsoft.Compute/galleries/galcbxuksdev001/images/windows-iis/versions/0.0.4"
+  source_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2016-Datacenter"
+    version   = "latest"
+  }
   admin_username  = "azureuser"
   admin_password  = random_password.azure-password.result
 
