@@ -1,4 +1,5 @@
 name: Deploy Resources Required for Remote TFSTATE
+on: [workflow_dispatch]
 
 permissions:
       id-token: write
