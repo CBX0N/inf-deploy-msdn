@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
-  [Parameter()][string]$tf_rg_name = "rg-tfstate-cbx-dev-uks-001",
-  [Parameter()][string]$tf_sa_name = "satfstatecbxdevuks001",
+  [Parameter()][string]$tf_rg_name = "rg-tf-cbx-dev-uks-001",
+  [Parameter()][string]$tf_sa_name = "satfcbxdevuks001",
   [Parameter()][string]$tf_container_name = "tfstate",
   [Parameter()][string]$location = "uksouth",
   [Parameter()][validateSet("create","destroy",IgnoreCase = $true)]$action = "create"
