@@ -27,6 +27,9 @@ jobs:
 
       - name: Change Directory
         run: cd ./terraform/shared/uks
+      
+      - name: pwd
+        run: pwd
 
       - name: Terraform Init
         run: terraform init
