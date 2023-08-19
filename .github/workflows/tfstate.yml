@@ -26,7 +26,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Change Directory
-        run: cd ./terraform/shared/uks
+        run: cd ./terraform/shared/uks && pwd
       
       - name: pwd
         run: pwd
