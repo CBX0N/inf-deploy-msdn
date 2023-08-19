@@ -1,3 +1,3 @@
-location       = "uksouth"
-service        = "cbx"
-env-code       = "dev"
+location = "uksouth"
+service  = "cbx"
+env-code = "dev"
