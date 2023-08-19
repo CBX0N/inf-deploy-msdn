@@ -34,7 +34,7 @@ jobs:
         working-directory: ./terraform/shared/uks
 
       - name: Terraform Plan
-        run: terraform plan -input=false -out tfplan
+        run: terraform plan -input=false
         working-directory: ./terraform/shared/uks
 
   apply:
@@ -46,6 +46,9 @@ jobs:
         shell: bash
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
         
@@ -58,6 +61,14 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        working-directory: ./terraform/shared/uks
+
+      - name: Terraform Format
+        run: terraform fmt -check
+        working-directory: ./terraform/shared/uks
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -out tfplan
         working-directory: ./terraform/shared/uks
       
       - name: Terraform Apply
