@@ -1,5 +1,5 @@
 name: Deploy Resources Required for Remote TFSTATE
-on: [push]
+on: []
 
 permissions:
       id-token: write
