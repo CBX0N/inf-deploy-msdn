@@ -4,7 +4,9 @@ terraform {
       source = "hashicorp/azurerm"
     }
   }
-  backend "azurerm" {}
+  backend "azurerm" {
+    use_oidc = true
+  }
 }
 
 provider "azurerm" {
