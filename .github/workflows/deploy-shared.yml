@@ -35,6 +35,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: tfplan
+          path: ./terraform/shared/uks/tfplan
 
   apply:
     env:
