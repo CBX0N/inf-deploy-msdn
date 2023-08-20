@@ -44,8 +44,8 @@ resource "azurerm_windows_virtual_machine" "vm" {
     sku       = "2016-Datacenter"
     version   = "latest"
   }
-  admin_username  = "azureuser"
-  admin_password  = random_password.azure-password.result
+  admin_username = "azureuser"
+  admin_password = random_password.azure-password.result
 
   depends_on = [azurerm_network_interface.nic, random_password.azure-password, azurerm_resource_group.vm-rg]
 }

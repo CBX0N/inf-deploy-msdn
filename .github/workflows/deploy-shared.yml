@@ -26,7 +26,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ vars.TFSTATE_CONTAINER_NAME }}" -backend-config="key=${{ vars.TFSTATE_KEY }}"
         working-directory: ./terraform/shared/uks
 
       - name: Terraform Format
@@ -36,6 +36,12 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false
         working-directory: ./terraform/shared/uks
+
+      - name: Upload TFPlan
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: ./terraform/shared/uks/tfplan
 
   apply:
     runs-on: ubuntu-latest
@@ -60,17 +66,15 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Init
-        run: terraform init
-        working-directory: ./terraform/dev/uks
-
-      - name: Terraform Format
-        run: terraform fmt
-        working-directory: ./terraform/dev/uks
-
-      - name: Terraform Plan
-        run: terraform plan -input=false -out tfplan
-        working-directory: ./terraform/dev/uks
+        run: terraform init -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ vars.TFSTATE_CONTAINER_NAME }}" -backend-config="key=${{ vars.TFSTATE_KEY }}"
+        working-directory: ./terraform/shared/uks
       
+      - name: Download TFPlan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: ./terraform/shared/uks
+
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        working-directory: ./terraform/dev/uks
+        run: terraform apply -auto-approve tfplan 
+        working-directory: ./terraform/shared/uks

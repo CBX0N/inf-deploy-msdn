@@ -22,16 +22,16 @@ resource "azurerm_shared_image_gallery" "gal" {
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-resource "azurerm_shared_image" "app" {
-  name                = "windows-iis"
-  os_type             = "Windows"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  gallery_name        = azurerm_shared_image_gallery.gal.name
+# resource "azurerm_shared_image" "app" {
+#   name                = "windows-iis"
+#   os_type             = "Windows"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   location            = azurerm_resource_group.rg.location
+#   gallery_name        = azurerm_shared_image_gallery.gal.name
 
-  identifier {
-    offer     = "windows-server-2022-iis"
-    publisher = "cbxon"
-    sku       = "standard"
-  }
-}
+#   identifier {
+#     offer     = "windows-server-2022-iis"
+#     publisher = "cbxon"
+#     sku       = "standard"
+#   }
+# }
