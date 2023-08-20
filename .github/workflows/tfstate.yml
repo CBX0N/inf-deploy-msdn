@@ -1,4 +1,4 @@
-name: Deploy Resources Required for Remote TFSTATE
+name: Deploy TFSTATE Backend
 on: [workflow_dispatch]
 
 permissions:
