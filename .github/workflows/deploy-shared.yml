@@ -6,31 +6,27 @@ permissions:
       contents: read
 jobs: 
   plan:
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}   
     runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: HashiCorp - Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
-        
-      # - name: Az CLI login
-      #   uses: azure/login@v1
-      #   with:
-      #     client-id: ${{ secrets.AZURE_CLIENT_ID }}
-      #     tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-      #     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Terraform Init
-        run: terraform init -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ vars.TFSTATE_CONTAINER_NAME }}" -backend-config="key=${{ vars.TFSTATE_KEY }}"
-        working-directory: ./terraform/shared/uks
 
       - name: Terraform Format
         run: terraform fmt -check
+        working-directory: ./terraform/shared/uks
+      
+      - name: Terraform Init
+        run: terraform init -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ vars.TFSTATE_CONTAINER_NAME }}" -backend-config="key=${{ vars.TFSTATE_KEY }}"
         working-directory: ./terraform/shared/uks
 
       - name: Terraform Plan
@@ -43,38 +39,38 @@ jobs:
           name: tfplan
           path: ./terraform/shared/uks/tfplan
 
-  apply:
-    runs-on: ubuntu-latest
-    needs: plan
-    environment: shared
-    defaults:
-      run:
-        shell: bash
+  # apply:
+  #   runs-on: ubuntu-latest
+  #   needs: plan
+  #   environment: shared
+  #   defaults:
+  #     run:
+  #       shell: bash
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: HashiCorp - Setup Terraform
-        uses: hashicorp/setup-terraform@v2.0.3
+  #     - name: HashiCorp - Setup Terraform
+  #       uses: hashicorp/setup-terraform@v2.0.3
         
-      - name: Az CLI login
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #     - name: Az CLI login
+  #       uses: azure/login@v1
+  #       with:
+  #         client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Terraform Init
-        run: terraform init -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ vars.TFSTATE_CONTAINER_NAME }}" -backend-config="key=${{ vars.TFSTATE_KEY }}"
-        working-directory: ./terraform/shared/uks
+  #     - name: Terraform Init
+  #       run: terraform init -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ vars.TFSTATE_CONTAINER_NAME }}" -backend-config="key=${{ vars.TFSTATE_KEY }}"
+  #       working-directory: ./terraform/shared/uks
       
-      - name: Download TFPlan
-        uses: actions/download-artifact@v3
-        with:
-          name: tfplan
-          path: ./terraform/shared/uks
+  #     - name: Download TFPlan
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: tfplan
+  #         path: ./terraform/shared/uks
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan 
-        working-directory: ./terraform/shared/uks
+  #     - name: Terraform Apply
+  #       run: terraform apply -auto-approve tfplan 
+  #       working-directory: ./terraform/shared/uks
