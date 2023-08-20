@@ -60,6 +60,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: tfplan
+          path: ./terraform/shared/uks
 
       - name: Terraform Init
         run: terraform init -backend-config="resource_group_name=${{ vars.TFSTATE_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ vars.TFSTATE_STORAGE_ACCOUNT }}" -backend-config="container_name=${{ vars.TFSTATE_CONTAINER_NAME }}" -backend-config="key=${{ vars.TFSTATE_KEY }}"
